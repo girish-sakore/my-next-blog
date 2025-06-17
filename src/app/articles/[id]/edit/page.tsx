@@ -1,0 +1,86 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import ArticleForm from '@/components/ArticleForm';
+
+export default function EditArticle({ params }: { params: { id: string } }) {
+  const [articleId, setArticleId] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchParams() {
+      const resolvedParams = await params;
+      setArticleId(resolvedParams.id);
+    }
+
+    fetchParams();
+  }, []);
+
+  useEffect(() => {
+    if (articleId) {
+      fetchArticle();
+    }
+  }, [articleId]);
+  
+  async function fetchArticle() {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/articles/${articleId}`);
+      if (!res.ok) {
+        throw new Error('Failed to fetch article');
+      }
+      const data = await res.json();
+      console.log('Fetched article:', data);
+      setTitle(data.title);
+      setBody(data.body);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(updatedTitle: string, updatedBody: string) {
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch(`/api/articles/${articleId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title: updatedTitle, body: updatedBody }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to update the article');
+      }
+
+      const data = await res.json();
+      router.push(`/articles/${data.id}`);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <main className="max-w-xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
+      <ArticleForm
+        initialTitle={title}
+        initialBody={body}
+        onSubmit={handleSubmit}
+        loading={loading}
+        error={error}
+      />
+    </main>
+  );
+}
