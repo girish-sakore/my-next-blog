@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ArticleForm from '@/components/ArticleForm';
 
-export default function EditArticle({ params }: { params: { id: string } }) {
+export default function EditArticle({ params }: { params: Promise<{ id: string }> }) {
   const [articleId, setArticleId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -38,7 +38,11 @@ export default function EditArticle({ params }: { params: { id: string } }) {
       setTitle(data.title);
       setBody(data.body);
     } catch (err: unknown) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
+      }
     }
      finally {
       setLoading(false);
@@ -65,7 +69,11 @@ export default function EditArticle({ params }: { params: { id: string } }) {
       const data = await res.json();
       router.push(`/articles/${data.id}`);
     } catch (err: unknown) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
+      }
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(_: NextRequest, context: { params: { id: string } }) {
-  const { id } = await context.params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   const article = await prisma.article.findUnique({
     where: { id: Number(id) },
@@ -15,8 +18,11 @@ export async function GET(_: NextRequest, context: { params: { id: string } }) {
   return NextResponse.json(article);
 }
 
-export async function DELETE(_: NextRequest, context: { params: { id: string } }) {
-  const { id } = await context.params;
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   try {
     await prisma.article.delete({
@@ -24,17 +30,26 @@ export async function DELETE(_: NextRequest, context: { params: { id: string } }
     });
     return NextResponse.json({ message: 'Article deleted' });
   } catch {
-    return NextResponse.json({ error: 'Delete failed or article not found' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Delete failed or article not found' },
+      { status: 400 }
+    );
   }
 }
 
-export async function PUT(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = await context.params;
-  const body = await req.json();
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const body = await request.json();
   const { title, body: content } = body;
 
-  if (!title || !content) {
-    return NextResponse.json({ error: 'Title and body are required' }, { status: 400 });
+  if (!title ||!content) {
+    return NextResponse.json(
+      { error: 'Title and body are required' },
+      { status: 400 }
+    );
   }
 
   try {
@@ -44,7 +59,10 @@ export async function PUT(req: NextRequest, context: { params: { id: string } })
     });
     return NextResponse.json(article);
   } catch (error) {
-    console.error('Error updating article:', error);
-    return NextResponse.json({ error: 'Update failed or article not found' }, { status: 404 });
+    console.error(error);
+    return NextResponse.json(
+      { error: 'Update failed or article not found'},
+      { status: 404 }
+    );
   }
 }
