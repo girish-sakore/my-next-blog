@@ -11,7 +11,9 @@ type Article = {
 };
 
 export default async function ArticlePage({ params }: { params: { id: string } }) {
-  const articleId = await params.id;
+  
+  const { id: articleId } = await params;
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles/${articleId}`, {
     cache: 'no-store',
   });

@@ -20,23 +20,3 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json(article, { status: 201 });
 }
-
-export async function PUT(req: NextRequest, context: { params: { id: string } }) {
-  const { id } = await context.params;
-  const body = await req.json();
-  const { title, body: content } = body;
-
-  if (!title || !content) {
-    return NextResponse.json({ error: 'Title and body are required' }, { status: 400 });
-  }
-
-  try {
-    const article = await prisma.article.update({
-      where: { id: Number(id) },
-      data: { title, body: content },
-    });
-    return NextResponse.json(article);
-  } catch (error) {
-    return NextResponse.json({ error: 'Update failed or article not found' }, { status: 404 });
-  }
-}

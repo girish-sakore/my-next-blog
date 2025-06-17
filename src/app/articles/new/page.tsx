@@ -33,7 +33,7 @@ export default function NewArticle() {
 
       const data = await res.json();
       router.push(`/articles/${data.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
     } finally {
       setLoading(false);

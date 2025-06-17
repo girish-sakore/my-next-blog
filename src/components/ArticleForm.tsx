@@ -16,6 +16,7 @@ export default function ArticleForm({
   loading: boolean;
   error: string;
 }) {
+
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
 
@@ -25,25 +26,30 @@ export default function ArticleForm({
     onSubmit(title, body);
   }
 
+  if (title === undefined || body === undefined) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form className="space-y-4">
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <input
         className="w-full p-2 border rounded focus:outline-green-200"
         type="text"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => {setTitle(e.target.value)}}
         placeholder="Title"
       />
       <textarea
         className="w-full p-2 border rounded focus:outline-green-200"
         value={body}
-        onChange={(e) => setBody(e.target.value)}
+        onChange={(e) => {setBody(e.target.value)}}
         placeholder="Body"
       />
       <button
         className="mr-2 px-4 py-2 border text-white rounded hover:bg-gray-900"
         type="submit"
+        onClick={handleSubmit}
         disabled={loading}
       >
         {loading ? 'Saving...' : 'Submit'}

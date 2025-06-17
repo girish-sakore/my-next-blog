@@ -19,13 +19,13 @@ export default function EditArticle({ params }: { params: { id: string } }) {
     }
 
     fetchParams();
-  }, []);
+  });
 
   useEffect(() => {
     if (articleId) {
       fetchArticle();
     }
-  }, [articleId]);
+  });
   
   async function fetchArticle() {
     try {
@@ -35,12 +35,12 @@ export default function EditArticle({ params }: { params: { id: string } }) {
         throw new Error('Failed to fetch article');
       }
       const data = await res.json();
-      console.log('Fetched article:', data);
       setTitle(data.title);
       setBody(data.body);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
-    } finally {
+    }
+     finally {
       setLoading(false);
     }
   }
@@ -64,7 +64,7 @@ export default function EditArticle({ params }: { params: { id: string } }) {
 
       const data = await res.json();
       router.push(`/articles/${data.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -74,13 +74,18 @@ export default function EditArticle({ params }: { params: { id: string } }) {
   return (
     <main className="max-w-xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
-      <ArticleForm
+      { (!loading) ? (
+        <ArticleForm
         initialTitle={title}
         initialBody={body}
         onSubmit={handleSubmit}
         loading={loading}
         error={error}
       />
+      ) : (
+        <p>Loading...</p>
+      )}
+      
     </main>
   );
 }
