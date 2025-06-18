@@ -14,7 +14,7 @@ export default async function Home() {
   const articles: Article[] = await res.json();
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
+    <main className="max-w-4xl mx-auto p-6">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold mb-6">Articles</h1>
         <div className="mb-4">

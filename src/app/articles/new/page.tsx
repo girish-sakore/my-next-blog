@@ -8,7 +8,7 @@ export default function NewArticle() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function handleSubmit(title: string, body: string) {
+  async function handleSubmit(title: string, body: string, references: string[] = []) {
     setLoading(true);
     setError('');
 
@@ -24,7 +24,7 @@ export default function NewArticle() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title, body }),
+        body: JSON.stringify({ title, body, references }),
       });
 
       if (!res.ok) {

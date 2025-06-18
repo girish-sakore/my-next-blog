@@ -8,6 +8,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
   const [articleId, setArticleId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [references, setReferences] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -22,11 +23,11 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
   });
 
   useEffect(() => {
-    if (articleId) {
+    if (articleId!== null && articleId!== undefined) {
       fetchArticle();
     }
-  });
-  
+  }, [articleId]);
+
   async function fetchArticle() {
     try {
       setLoading(true);
@@ -35,8 +36,18 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
         throw new Error('Failed to fetch article');
       }
       const data = await res.json();
+      if (!data) {
+        throw new Error('Article not found');
+      }
+      console.log('Fetched article:=>', data);
       setTitle(data.title);
       setBody(data.body);
+      if (data.references) {
+        setReferences(data.references);
+      } else {
+        setReferences([]);
+      }
+      console.log('references state:=>', references);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -49,7 +60,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
     }
   }
 
-  async function handleSubmit(updatedTitle: string, updatedBody: string) {
+  async function handleSubmit(updatedTitle: string, updatedBody: string, updatedReferences: string[] = []) {
     setLoading(true);
     setError('');
 
@@ -59,7 +70,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: updatedTitle, body: updatedBody }),
+        body: JSON.stringify({ title: updatedTitle, body: updatedBody, references: updatedReferences }),
       });
 
       if (!res.ok) {
@@ -86,6 +97,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
         <ArticleForm
         initialTitle={title}
         initialBody={body}
+        initialReferences={references}
         onSubmit={handleSubmit}
         loading={loading}
         error={error}

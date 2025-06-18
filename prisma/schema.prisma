@@ -12,4 +12,5 @@ model Article {
   title     String
   body      String
   createdAt DateTime @default(now())
+  references String[]
 }

@@ -42,10 +42,10 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
-  const { title, body: content } = body;
+  const req_body = await request.json();
+  const { title, body, references } = req_body;
 
-  if (!title ||!content) {
+  if (!title ||!body) {
     return NextResponse.json(
       { error: 'Title and body are required' },
       { status: 400 }
@@ -55,7 +55,7 @@ export async function PUT(
   try {
     const article = await prisma.article.update({
       where: { id: Number(id) },
-      data: { title, body: content },
+      data: { title, body, references },
     });
     return NextResponse.json(article);
   } catch (error) {

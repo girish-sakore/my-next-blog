@@ -7,6 +7,7 @@ type Article = {
   id: number;
   title: string;
   body: string;
+  references?: string[];
   createdAt: string;
 };
 
@@ -25,7 +26,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   if (!article) return notFound();
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
+    <main className="max-w-4xl mx-auto p-6">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
         <div>
@@ -44,6 +45,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <article className="text-lg leading-relaxed whitespace-pre-wrap">
         {article.body}
       </article>
+      <div className="text-sm italic font-serif font-thin mt-6">
+        <h2 className="mb-2">References</h2>
+        <ul className="list-disc pl-5">
+          {article.references && article.references.length > 0 ? (
+            article.references.map((ref, index) => (
+              <li key={index} className="mb-1">{ref}</li>
+            ))
+          ) : (
+            <li>No references available.</li>
+          )}
+        </ul>
+      </div>
     </main>
   );
 }
