@@ -8,7 +8,7 @@ export default function NewArticle() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function handleSubmit(title: string, body: string, references: string[] = []) {
+  async function handleSubmit(title: string, body: string, references: string[] = [], photos?: File[]) {
     setLoading(true);
     setError('');
 
@@ -19,12 +19,17 @@ export default function NewArticle() {
     }
 
     try {
+      const formData = new FormData();
+            formData.append('title', title);
+            formData.append('body', body);
+            references.forEach(ref => formData.append('references[]', ref));
+            if (photos) {
+              photos.forEach(photo => formData.append('photos', photo));
+            }
+
       const res = await fetch('/api/articles', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, body, references }),
+        body: formData,
       });
 
       if (!res.ok) {

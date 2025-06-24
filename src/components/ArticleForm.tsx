@@ -14,20 +14,26 @@ export default function ArticleForm({
   initialTitle?: string;
   initialBody?: string;
   initialReferences?: string[];
-  onSubmit: (title: string, body: string, references: string[]) => void;
+  onSubmit: (
+              title: string,
+              body: string,
+              references: string[],
+              photos?: File[]
+            ) => void;
   loading: boolean;
   error: string;
 }) {
 
   const [title, setTitle] = useState(initialTitle);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [body, setBody] = useState(initialBody);
   const [references, setReferences] = useState(initialReferences);
   const [newReference, setNewReference] = useState('');
 
   function handleSubmit(e: React.FormEvent) {
-    console.log('Submitting article:', { title, body, references });
+    console.log('Submitting article:', { title, body, references, photos });
     e.preventDefault();
-    onSubmit(title, body, references);
+    onSubmit(title, body, references, photos);
   }
 
   function handleAddReference() {
@@ -39,6 +45,12 @@ export default function ArticleForm({
 
   function handleRemoveReference(index: number) {
     setReferences(references.filter((_, i) => i !== index));
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    setPhotos(files as File[]);
+    console.log('Selected photos:', files);
   }
 
   if (title === undefined || body === undefined) {
@@ -55,15 +67,33 @@ export default function ArticleForm({
         onChange={(e) => {setTitle(e.target.value)}}
         placeholder="Title"
       />
+
+      <div className='text-sm'>
+        <label className="block mb-2">Upload Photos</label>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => {handleFileChange(e)}}
+          className="w-full p-2 border rounded focus:outline-green-200"
+        />
+      </div>
+
       <textarea
-        className="w-full p-2 border rounded focus:outline-green-200"
+        className="w-full p-2 border rounded focus:outline-green-200 resize-none"
         value={body}
         onChange={(e) => {setBody(e.target.value)}}
         placeholder="Body"
+        style={{ minHeight: '100px', overflow: 'hidden' }}
+        rows={1}
+        onInput={(e) => {
+          e.currentTarget.style.height = 'auto';
+          e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+        }}
       />
       <div>
-        <label className="block mb-2">References</label>
-        <div className="flex space-x-2 mb-4">
+        <label className="text-sm block mb-2">References</label>
+        <div className="text-sm flex space-x-2 mb-4">
           <input
             className="w-full p-2 border rounded focus:outline-green-200"
             type="text"

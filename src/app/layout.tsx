@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 // import { Roboto } from 'next/font/google'
 
 import "./globals.css";
+import Link from "next/link";
 
 const myFont = localFont({
   src: '../fonts/PopJoyStd-B.otf',
@@ -29,7 +30,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={myFont.className}>
-        {children}
+        {/* <Navbar /> */}
+        <nav className="bg-gray-800 text-white p-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <Link href="/" className="text-lg font-bold">
+              My Next Blog
+            </Link>
+            {/* <div>
+              <Link href="/articles/new" className="px-4 py-2 border text-white rounded hover:bg-gray-900">
+                Add New Article
+              </Link>
+            </div> */}
+          </div>
+        </nav>
+        <main className="max-w-4xl mx-auto p-6">{children}</main>
+        {/* <Footer /> */}
       </body>
     </html>
   );

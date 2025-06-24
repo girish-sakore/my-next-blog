@@ -13,4 +13,12 @@ model Article {
   body      String
   createdAt DateTime @default(now())
   references String[]
+  photos    Photo[]
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  url       String
+  article   Article   @relation(fields: [articleId], references: [id])
+  articleId Int
 }

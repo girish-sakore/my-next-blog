@@ -14,9 +14,9 @@ export default async function Home() {
   const articles: Article[] = await res.json();
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
+    <div>
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-6">Articles</h1>
+        <h1 className="text-2xl font-bold mb-6">Latest Articles</h1>
         <div className="mb-4">
           <Link href="/articles/new">
             <button className="px-4 py-2 border text-white rounded hover:bg-gray-900">
@@ -37,6 +37,6 @@ export default async function Home() {
           </li>
         ))}
       </ul>
-    </main>
+    </div>
   );
 }

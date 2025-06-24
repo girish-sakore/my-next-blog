@@ -9,6 +9,7 @@ type Article = {
   body: string;
   references?: string[];
   createdAt: string;
+  photos?: { url: string }[];
 };
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,10 +27,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   if (!article) return notFound();
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
+    <div>
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-4">{article.title}</h1>
-        <div>
+        <div className="min-w-max">
           <Link href={`/articles/${article.id}/edit`}>
             <button className="mx-2 px-4 py-2 text-sm border text-white rounded hover:bg-gray-900">
               Edit
@@ -42,6 +43,22 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <p className="text-sm text-gray-500 mb-6">
         Posted on {new Date(article.createdAt).toLocaleString()}
       </p>
+      {article.photos && article.photos.length > 0 && (
+        <section className="mt-8">
+          {/* <h2 className="text-xl font-semibold mb-2">Photos</h2> */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {article.photos.map((photo, index) => (
+              <div key={index} className="overflow-hidden rounded border border-gray-300 shadow">
+                <img
+                  src={photo.url}
+                  alt={`Photo ${index + 1}`}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
       <article className="text-lg leading-relaxed whitespace-pre-wrap">
         {article.body}
       </article>
@@ -57,6 +74,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
           )}
         </ul>
       </div>
-    </main>
+    </div>
   );
 }
