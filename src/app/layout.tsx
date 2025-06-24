@@ -4,6 +4,9 @@ import localFont from "next/font/local";
 
 import "./globals.css";
 import Link from "next/link";
+// import AdSlot from "@/components/AdSlot";
+import Script from "next/script";
+import GoogleAdComp from "@/components/GoogleAdComp";
 
 const myFont = localFont({
   src: '../fonts/PopJoyStd-B.otf',
@@ -29,6 +32,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google AdSense Script */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3457241956721444"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={myFont.className}>
         {/* <Navbar /> */}
         <nav className="bg-gray-800 text-white p-4">
@@ -43,7 +55,25 @@ export default function RootLayout({
             </div> */}
           </div>
         </nav>
-        <main className="max-w-4xl mx-auto p-6">{children}</main>
+
+        <div className="flex justify-center">
+          {/* Left Ad */}
+          <div className="hidden lg:block w-[160px] p-2">
+            <div className="sticky top-10">
+              <GoogleAdComp />
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <main className="max-w-4xl w-full p-6">{children}</main>
+
+          {/* Right Ad */}
+          <div className="hidden lg:block w-[160px] p-2">
+            <div className="sticky top-10">
+              <GoogleAdComp />
+            </div>
+          </div>
+        </div>
         {/* <Footer /> */}
       </body>
     </html>

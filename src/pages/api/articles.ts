@@ -45,8 +45,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
   }
 
   if (req.method === 'POST') {
-    // @ts-ignore
-    upload.array('photos')(req, res, async (err: any) => {
+    // @ts-expect-error Multer types
+    upload.array('photos')(req, res, async (err: unknown) => {
       if (err) {
         console.error('Upload error:', err);
         return res.status(500).json({ error: 'File upload failed' });
@@ -72,7 +72,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
           },
         });
 
-        const files = req.files as Express.Multer.File[];
+        const files = (req as NextApiRequest & { files: Express.Multer.File[] }).files;
         if (files && files.length > 0) {
           await Promise.all(
             files.map((file) =>
