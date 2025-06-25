@@ -2,12 +2,12 @@
 
 export default function DeleteArticle({ id }: { id: number }) {
   const handleDelete = async () => {
-    const response = await fetch(`/api/articles/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles/${id}`, {
       method: 'DELETE',
     });
 
     if (response.ok) {
-      window.location.href = '/';
+      window.location.href = `${process.env.NEXT_PUBLIC_BASE_PATH}`;
     } else {
       const errorData = await response.json();
       alert(errorData.error || 'Failed to delete article');

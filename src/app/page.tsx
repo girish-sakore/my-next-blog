@@ -7,9 +7,13 @@ type Article = {
 };
 
 export default async function Home() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles`, {
     next: { revalidate: 0 }, // disable caching for dev
   });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch articles');
+  }
 
   const articles: Article[] = await res.json();
 

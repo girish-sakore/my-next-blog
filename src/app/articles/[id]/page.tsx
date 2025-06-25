@@ -16,7 +16,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   
   const { id: articleId } = await params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/articles/${articleId}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles/${articleId}`, {
     cache: 'no-store',
   });
 

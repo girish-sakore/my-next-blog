@@ -27,7 +27,7 @@ export default function NewArticle() {
               photos.forEach(photo => formData.append('photos', photo));
             }
 
-      const res = await fetch('/api/articles', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles`, {
         method: 'POST',
         body: formData,
       });
