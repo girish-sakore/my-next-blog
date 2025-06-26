@@ -53,12 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
       }
 
       try {
-        const { title, body } = req.body;
-        const references = req.body['references[]']
-          ? Array.isArray(req.body['references[]'])
-            ? req.body['references[]']
-            : [req.body['references[]']]
-          : [];
+        const { title, body, references } = req.body;
 
         if (!title || !body) {
           return res.status(400).json({ error: 'Title and body are required' });

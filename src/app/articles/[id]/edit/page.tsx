@@ -31,7 +31,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
   async function fetchArticle() {
     try {
       setLoading(true);
-      const res = await fetch(`/api/articles/${articleId}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles/${articleId}`);
       if (!res.ok) {
         throw new Error('Failed to fetch article');
       }
@@ -39,7 +39,6 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
       if (!data) {
         throw new Error('Article not found');
       }
-      console.log('Fetched article:=>', data);
       setTitle(data.title);
       setBody(data.body);
       if (data.references) {
@@ -47,7 +46,6 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
       } else {
         setReferences([]);
       }
-      console.log('references state:=>', references);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -65,7 +63,7 @@ export default function EditArticle({ params }: { params: Promise<{ id: string }
     setError('');
 
     try {
-      const res = await fetch(`/api/articles/${articleId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${process.env.NEXT_PUBLIC_BASE_PATH}/api/articles/${articleId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
